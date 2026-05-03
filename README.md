@@ -120,3 +120,18 @@ npx serve frontend
 - Connect wallet when prompted by the app
 
 ---
+---
+
+## 🌐 Live Demo
+
+- **Frontend (Netlify):** https://your-netlify-link.netlify.app  
+- **Backend (Render):** https://decentralized-file-storage-dapp.onrender.com  
+
+> Note: Backend may take ~30–40 seconds to respond initially due to free tier cold start.
+
+---
+
+## 🔗 Blockchain Verification
+
+- **Contract Address (Sepolia):** 0x51b252dC4Cf0EF7b8e1540E74204C5a68AEb1800  
+- **View on Etherscan:** https://sepolia.etherscan.io/address/0x51b252dC4Cf0EF7b8e1540E74204C5a68AEb1800
