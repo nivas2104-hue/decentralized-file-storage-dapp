@@ -9,8 +9,9 @@ const upload = multer();
 
 app.use(cors());
 
-const PINATA_API_KEY = process.env.PINATA_API_KEY;
-const PINATA_SECRET = process.env.PINATA_SECRET;
+const PINATA_API_KEY = "cb88ffd875a8750715b6";
+const PINATA_SECRET =
+  "117906c966998457cd4daf4e895215c3b4870eeee14a6352d25e003b7fbb544e";
 
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
