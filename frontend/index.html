@@ -475,10 +475,13 @@
         formData.append("file", file);
 
         try {
-          let res = await fetch("http://localhost:3000/upload", {
-            method: "POST",
-            body: formData,
-          });
+          let res = await fetch(
+            "https://decentralized-file-storage-dapp.onrender.com/upload",
+            {
+              method: "POST",
+              body: formData,
+            },
+          );
 
           let data = await res.json();
           console.log(data);
