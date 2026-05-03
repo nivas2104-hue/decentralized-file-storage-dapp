@@ -461,8 +461,14 @@
       }
 
       async function uploadFile() {
+        if (isUploading) return; // 🔥 prevent multiple clicks
+        isUploading = true;
+
         const file = document.getElementById("fileInput").files[0];
-        if (!file) return alert("Select a file first");
+        if (!file) {
+          isUploading = false;
+          return alert("Select a file first");
+        }
 
         let status = document.getElementById("status");
 
@@ -484,16 +490,12 @@
           );
 
           let data = await res.json();
-          console.log(data);
 
-          // 🔥 FIX 1: correct field check
           if (!data.hash) {
-            status.innerHTML = `<div class="status-card" style="color:var(--danger)">Upload failed</div>`;
-            showToast("Upload failed");
-            return;
+            isUploading = false;
+            throw new Error("Upload failed");
           }
 
-          // 🔥 FIX 2: correct field usage
           let hash = data.hash;
 
           status.innerHTML = `
@@ -505,72 +507,32 @@
         <div class="loader-text" style="margin-top:10px;">Waiting for MetaMask...</div>
       </div>`;
 
-          try {
-            const tx = await contract.methods
-              .uploadFile(hash)
-              .send({
-                from: window.account,
-                gas: 300000,
-              })
-              .on("transactionHash", function (hash) {
-                console.log("TX SENT:", hash);
-              })
-              .on("receipt", function (receipt) {
-                console.log("TX CONFIRMED:", receipt);
-              });
-
-            status.innerHTML = `
-    <div class="status-card">
-      <div class="hash-val">
-        ${hash}
-        <button class="copy-btn" onclick="copyToClipboard('${hash}')">copy</button>
-      </div>
-      <div class="meta-row" style="margin-top:8px;">
-        <span class="success-dot"></span>Stored on-chain
-      </div>
-      <a class="tx-link" target="_blank"
-        href="https://sepolia.etherscan.io/tx/${tx.transactionHash}">
-        ↗ View on Etherscan
-      </a>
-    </div>`;
-
-            setTimeout(displayHistory, 2000);
-            showToast("File stored successfully!");
-          } catch (err) {
-            console.error("TX ERROR:", err);
-
-            status.innerHTML = `
-    <div class="status-card" style="color:var(--danger)">
-      Transaction failed: ${err.message}
-    </div>`;
-
-            showToast("Transaction failed");
-          }
+          const tx = await contract.methods.uploadFile(hash).send({
+            from: window.account,
+            gas: 300000,
+          });
 
           status.innerHTML = `
       <div class="status-card">
-        <div class="hash-val">
-          ${hash}
-          <button class="copy-btn" onclick="copyToClipboard('${hash}')">copy</button>
-        </div>
-        <div class="meta-row" style="margin-top:8px;">
+        <div class="hash-val">${hash}</div>
+        <div class="meta-row">
           <span class="success-dot"></span>Stored on-chain
         </div>
-        <a class="tx-link" target="_blank"
-          href="https://sepolia.etherscan.io/tx/${tx.transactionHash}">
-          ↗ View on Etherscan
-        </a>
       </div>`;
 
           setTimeout(displayHistory, 2000);
           showToast("File stored successfully!");
         } catch (err) {
           console.error(err);
-          status.innerHTML = `<div class="status-card" style="color:var(--danger)">Error uploading file</div>`;
-          showToast("Something went wrong");
+          status.innerHTML = `
+      <div class="status-card" style="color:var(--danger)">
+        ${err.message}
+      </div>`;
         }
-      }
 
+        isUploading = false; // 🔥 reset
+      }
+      let isUploading = false;
       async function displayHistory() {
         let historyDiv = document.getElementById("history");
 
