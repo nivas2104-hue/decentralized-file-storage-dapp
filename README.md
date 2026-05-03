@@ -124,8 +124,8 @@ npx serve frontend
 
 ## 🌐 Live Demo
 
-- **Frontend (Netlify):** https://your-netlify-link.netlify.app  
-- **Backend (Render):** https://decentralized-file-storage-dapp.onrender.com  
+- **Frontend (Netlify):** https://filestoragedapp.netlify.app 
+- **Backend (Render):** https://decentralized-file-storage-dapp.onrender.com
 
 > Note: Backend may take ~30–40 seconds to respond initially due to free tier cold start.
 
